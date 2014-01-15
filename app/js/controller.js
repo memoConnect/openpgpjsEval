@@ -3,8 +3,6 @@
 var ctrl = angular.module('Controllers',[]);
 
 ctrl.controller('GenerateCtrl',['$scope','LocalStorage',function($scope, LocalStorage){
-    var data;
-
     $scope.message = "";
 
     $scope.email = "";
@@ -18,6 +16,8 @@ ctrl.controller('GenerateCtrl',['$scope','LocalStorage',function($scope, LocalSt
 
 
     $scope.generateKeyPair = function(){
+        var data;
+
         clearKeys();
 
         if(html5_local_storage() !== true){
@@ -69,6 +69,11 @@ ctrl.controller('GenerateCtrl',['$scope','LocalStorage',function($scope, LocalSt
         $scope.pubKey = LocalStorage.get("pubKey");
 
     };
+
+    $scope.clearStorage = function(){
+        clearKeys();
+        LocalStorage.clearAll();
+    }
 
     function html5_local_storage(){
         try {
