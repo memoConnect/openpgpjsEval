@@ -56,6 +56,8 @@ ctrl.controller('GenerateCtrl',['$scope','LocalStorage',function($scope, LocalSt
         } catch (e){
            $scope.message = e;
         }
+
+        return true;
     };
 
     $scope.load = function(){
@@ -68,6 +70,7 @@ ctrl.controller('GenerateCtrl',['$scope','LocalStorage',function($scope, LocalSt
         $scope.privKey = LocalStorage.get("privKey");
         $scope.pubKey = LocalStorage.get("pubKey");
 
+        return true;
     };
 
     $scope.clearStorage = function(){
