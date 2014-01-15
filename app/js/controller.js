@@ -11,9 +11,15 @@ ctrl.controller('GenerateCtrl',['$scope','LocalStorage',function($scope, LocalSt
     $scope.passphrase = "";
 
     $scope.keyType = 1;
-    $scope.numBits = 1024;
+    $scope.numBits = 2048;
+
+    $scope.privKey = "";
+    $scope.pubKey = "";
+
 
     $scope.generateKeyPair = function(){
+        clearKeys();
+
         if(html5_local_storage() !== true){
             $scope.message = "LocalStorage not available!";
             return false;
@@ -43,6 +49,7 @@ ctrl.controller('GenerateCtrl',['$scope','LocalStorage',function($scope, LocalSt
             LocalStorage.save("pubKey",data.publicKeyArmored);
 
             $scope.timer = end / 1000;
+            $scope.message = "Finished in " + $scope.timer + "s";
 
        } catch (e){
            $scope.message = e;
@@ -55,7 +62,9 @@ ctrl.controller('GenerateCtrl',['$scope','LocalStorage',function($scope, LocalSt
             return false;
         }
 
+//        $scope.privKey = (LocalStorage.get("privKey") == undefined ||  LocalStorage.get("privKey") == 'undefined') ? LocalStorage.get("privKey") : "";
         $scope.privKey = LocalStorage.get("privKey");
+        $scope.pubKey = LocalStorage.get("pubKey");
 
     };
 
@@ -73,5 +82,10 @@ ctrl.controller('GenerateCtrl',['$scope','LocalStorage',function($scope, LocalSt
         }
 
         return false;
+    }
+
+    function clearKeys (){
+        $scope.privKey = "";
+        $scope.pubKey = "";
     }
 }]);

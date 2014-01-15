@@ -8,9 +8,9 @@
         <label rel="email">E-Mail</label><input name="email" type="text" ng-model="email" /><br />
         <label rel="passphrase">Passphrase</label><input name="passphrase" type="password" ng-model="passphrase" />
         <br />
-        <label rel="keyType">KeyType</label><input name="keyType" type="number" maxlength="3" ng-model="keyType" placeholder="1" />
+        <label rel="keyType">KeyType</label><input name="keyType" type="number" maxlength="3" ng-model="keyType" readonly /> 1 = RSA
         <br />
-        <label rel="numBits">numBits</label><input name="numBits" type="number" maxlength="4" ng-model="numBits" placeholder="1024" />
+        <label rel="numBits">numBits</label><input name="numBits" type="number" maxlength="4" ng-model="numBits" placeholder="2048" />
         <br />
         <input type="button" value="go" ng-click="generateKeyPair()" />
     </div>
