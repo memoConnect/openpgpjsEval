@@ -30,7 +30,9 @@ ctrl.controller('GenerateCtrl',['$scope','LocalStorage',function($scope, LocalSt
             return false;
         }
 
-       try {
+        $scope.message = "Working in Progress.... ";
+
+        try {
             var start = new Date().getTime();
 
             data = openpgp.generateKeyPair($scope.keyType,$scope.numBits,$scope.email,$scope.passphrase);
@@ -51,9 +53,9 @@ ctrl.controller('GenerateCtrl',['$scope','LocalStorage',function($scope, LocalSt
             $scope.timer = end / 1000;
             $scope.message = "Finished in " + $scope.timer + "s";
 
-       } catch (e){
+        } catch (e){
            $scope.message = e;
-       }
+        }
     };
 
     $scope.load = function(){
