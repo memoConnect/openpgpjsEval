@@ -1,3 +1,3 @@
 openpgpjsEval
 =============
-Just a Angular/OpenPGP Test App
+Just an Angular/OpenPGP Test App
