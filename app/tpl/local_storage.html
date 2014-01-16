@@ -13,9 +13,21 @@
     </form>
 </section>
 
-<section class="handleStorageKeys">
-    <h3>Key List</h3>
-    <div ng-repeat="key in storageKeys" class="repeated-item" ng-controller="handleKeyCtrl">
-        <div class="key"><span>{{key}}</span> <button ng-click="showValue(key)">show</button> <button ng-click="deleteKey(key)">delete</button></div>
+<section class="handleStorageKeys clearfix mb40" ng-controller="handleKeyCtrl">
+    <div class="fl mr20">
+        <h3>Key List</h3>
+        <div ng-repeat="key in storageKeys" class="repeated-item mb20">
+            <div class="item-key"><span>{{key}}</span> <button ng-click="showValue(key)" class="btn btn-default btn-sm">show</button> <button ng-click="deleteKey(key)" class="btn btn-default btn-sm">delete</button></div>
+        </div>
     </div>
+    <div class="fl">
+        <h3>Value</h3>
+        <textarea style="width:300px;height:150px">{{currentValue}}</textarea>
+    </div>
+</section>
+
+<section ng-controller="handleAllKeysCtrl">
+    <h3>Ultimate Key</h3>
+    <input type="text" name="name" ng-model="name" />
+    <button class="btn btn-primary" ng-click="generateUltimateValue()">create</button>
 </section>

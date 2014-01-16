@@ -33,7 +33,7 @@ app.factory('LocalStorage',function(){
 
         save: function (key, data) {
             if(check() !== false){
-                    localStorage.setItem(key, JSON.stringify(data));
+                    localStorage.setItem(key, data);
                 return true;
             }
 

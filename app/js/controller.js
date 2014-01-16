@@ -131,16 +131,44 @@ ctrl.controller('addFormKeyCtrl',['$rootScope','$scope','LocalStorage',function(
     $scope.resetForm = function(){
         $scope.key = "";
         $scope.value = "";
-    }
+    };
 }]);
 
 ctrl.controller('handleKeyCtrl',['$rootScope','$scope','LocalStorage', function($rootScope,$scope,LocalStorage){
+    $scope.currentValue = "";
+
     $scope.deleteKey = function(key){
+        if($scope.currentValue == LocalStorage.get(key)){
+            $scope.clearValue();
+        };
+
         if(LocalStorage.remove(key)){
             $rootScope.$broadcast('refreshKeys');
         }
     };
     $scope.showValue = function(key){
-        console.log(LocalStorage.get(key))
+        $scope.currentValue = LocalStorage.get(key);
     };
+
+    $scope.clearValue = function (){
+        $scope.currentValue = "";
+    };
+}]);
+
+ctrl.controller('handleAllKeysCtrl',['$rootScope','$scope','LocalStorage', function($rootScope, $scope, LocalStorage){
+    $scope.name = "MULTIKEY";
+    var ultimateValue = {};
+
+    $scope.generateUltimateValue = function(){
+        ultimateValue = {};
+        var keys = LocalStorage.getAllKeys();
+
+        angular.forEach(keys, function(key, index){
+            this[key] = LocalStorage.get(key);
+        }, ultimateValue);
+
+        if(LocalStorage.save($scope.name, JSON.stringify(ultimateValue))){
+            $rootScope.$broadcast('refreshKeys');
+        }
+    }
 }]);
