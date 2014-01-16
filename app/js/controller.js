@@ -156,7 +156,7 @@ ctrl.controller('handleKeyCtrl',['$rootScope','$scope','LocalStorage', function(
 }]);
 
 ctrl.controller('handleAllKeysCtrl',['$rootScope','$scope','LocalStorage', function($rootScope, $scope, LocalStorage){
-    $scope.name = "MULTIKEY";
+    var ultimateKey = "MULTIKEY";
     var ultimateValue = {};
 
     $scope.generateUltimateValue = function(){
@@ -167,7 +167,7 @@ ctrl.controller('handleAllKeysCtrl',['$rootScope','$scope','LocalStorage', funct
             this[key] = LocalStorage.get(key);
         }, ultimateValue);
 
-        if(LocalStorage.save($scope.name, JSON.stringify(ultimateValue))){
+        if(LocalStorage.save(ultimateKey, JSON.stringify(ultimateValue))){
             $rootScope.$broadcast('refreshKeys');
         }
     }
