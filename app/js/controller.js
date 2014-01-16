@@ -20,7 +20,7 @@ ctrl.controller('GenerateCtrl',['$scope','LocalStorage',function($scope, LocalSt
 
         clearKeys();
 
-        if(html5_local_storage() !== true){
+        if(LocalStorage.check() !== true){
             $scope.message = "LocalStorage not available!";
             return false;
         }
@@ -61,14 +61,13 @@ ctrl.controller('GenerateCtrl',['$scope','LocalStorage',function($scope, LocalSt
     };
 
     $scope.load = function(){
-        if(html5_local_storage() !== true){
+        if(LocalStorage.check() !== true){
             $scope.message = "LocalStorage not available!";
             return false;
         }
 
-//        $scope.privKey = (LocalStorage.get("privKey") == undefined ||  LocalStorage.get("privKey") == 'undefined') ? LocalStorage.get("privKey") : "";
-        $scope.privKey = LocalStorage.get("privKey");
-        $scope.pubKey = LocalStorage.get("pubKey");
+        $scope.privKey  = LocalStorage.get("privKey");
+        $scope.pubKey   = LocalStorage.get("pubKey");
 
         return true;
     };
@@ -76,15 +75,7 @@ ctrl.controller('GenerateCtrl',['$scope','LocalStorage',function($scope, LocalSt
     $scope.clearStorage = function(){
         clearKeys();
         LocalStorage.clearAll();
-    }
-
-    function html5_local_storage(){
-        try {
-            return 'localStorage' in window && window['localStorage'] !== null;
-        } catch(e){
-            return false;
-        }
-    }
+    };
 
     function checkBrowserRandomValues(){
         if(window.crypto.getRandomValues){
@@ -98,4 +89,58 @@ ctrl.controller('GenerateCtrl',['$scope','LocalStorage',function($scope, LocalSt
         $scope.privKey = "";
         $scope.pubKey = "";
     }
+}]);
+
+ctrl.controller('StorageCtrl',['$scope','LocalStorage',function($scope,LocalStorage){
+    $scope.checkLocalStorageMessage = 'LocalStorage nicht verfügbar!';
+
+    $scope.refreshKeys = function(){
+        $scope.storageKeys = LocalStorage.getAllKeys();
+    }
+
+    $scope.checkStorage = function(){
+        if(LocalStorage.check() !== false){
+            $scope.checkLocalStorageMessage = 'LocalStorage ist verfügbar!';
+            $scope.$broadcast('refreshKeys');
+        }
+    };
+
+    $scope.isLocalStorage = function(){
+        if(localStorage !== false){
+            return true;
+        }
+
+        return false;
+    }
+
+    $scope.clearStorage = function(){
+        localStorage.clearAll();
+    }
+
+    $scope.$on('refreshKeys', $scope.refreshKeys);
+}]);
+
+ctrl.controller('addFormKeyCtrl',['$rootScope','$scope','LocalStorage',function($rootScope,$scope,LocalStorage){
+    $scope.addStorageKey = function(){
+       if(LocalStorage.save($scope.key, $scope.value)){
+           $scope.resetForm();
+           $rootScope.$broadcast('refreshKeys');
+       }
+    };
+
+    $scope.resetForm = function(){
+        $scope.key = "";
+        $scope.value = "";
+    }
+}]);
+
+ctrl.controller('handleKeyCtrl',['$rootScope','$scope','LocalStorage', function($rootScope,$scope,LocalStorage){
+    $scope.deleteKey = function(key){
+        if(LocalStorage.remove(key)){
+            $rootScope.$broadcast('refreshKeys');
+        }
+    };
+    $scope.showValue = function(key){
+        console.log(LocalStorage.get(key))
+    };
 }]);

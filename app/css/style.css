@@ -2,9 +2,16 @@ body {margin:50px}
 
 .fl {float:left;position:relative}
 .fr {float:right;position:relative}
-.clearfix :after{clear:both}
 
 .mr20 {margin-right:20px}
 .mb20 {margin-bottom:20px}
+.mb40 {margin-bottom:40px}
 
 label {width:100px;margin-right:10px}
+
+nav ul {margin:0;padding:0}
+nav ul li {margin-right:25px}
+
+.localStorageOK {color:#4cae4c}
+.localStorageFail {color:#ac2925}
+.storageForm label {width:40px;margin-right:10px}
