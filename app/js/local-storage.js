@@ -6,7 +6,6 @@
 app.factory('LocalStorage',function(){
     return {
         check: function(){
-            console.log("LocalStorage check")
             try {
                 return 'localStorage' in window && window['localStorage'] !== null;
             } catch(e){
@@ -71,6 +70,26 @@ app.factory('LocalStorageService',['LocalStorage',function(LocalStorage){
         ultimateKey = "MULTIKEY",
         ultimateValue = {};
 
+    function getUltimateValue(){
+        var value = LocalStorage.get(ultimateKey);
+        if(value == null){
+            return {}
+        } else {
+            return JSON.parse(value);
+        }
+    }
+
+    function saveUltimateValue(value){
+        try {
+            LocalStorage.save(ultimateKey, JSON.stringify(value));
+            return true;
+        } catch(e){
+            //
+        }
+
+        return false;
+    }
+
     return {
         check: function(){
             if(useableCheck !== true){
@@ -82,25 +101,41 @@ app.factory('LocalStorageService',['LocalStorage',function(LocalStorage){
         },
 
         get: function (key) {
-            if(useable !== false){
-                return LocalStorage.getItem(key);
+            if(this.check() !== false){
+                ultimateValue = getUltimateValue();
+                if(ultimateValue[key] != undefined){
+                    return ultimateValue[key];
+                }
             }
 
-            return "";
+            return "undefined";
         },
 
         getAllKeys: function(){
-            if(useable !== false){
-                // http://stackoverflow.com/questions/8419354/get-html5-localstorage-keys
-                return LocalStorage.getAllKeys();
+            if(this.check() !== false){
+                var keys = [];
+                ultimateValue = getUltimateValue();
+                console.log(ultimateValue)
+
+                for(var k in ultimateValue){
+                    keys.push(k);
+                }
+
+                return keys;
             }
 
             return [];
         },
 
         save: function (key, data) {
-            if(useable !== false){
-                LocalStorage.setItem(key, data);
+            if(this.check() !== false){
+                ultimateValue = getUltimateValue();
+                if(ultimateValue == null){
+                    ultimateValue = {};
+                }
+                ultimateValue[key] = data;
+
+                saveUltimateValue(ultimateValue);
                 return true;
             }
 
@@ -108,17 +143,26 @@ app.factory('LocalStorageService',['LocalStorage',function(LocalStorage){
         },
 
         remove: function (key) {
-            if(useable !== false){
-                LocalStorage.removeItem(key);
-                return true;
+            if(this.check() !== false){
+                ultimateValue = getUltimateValue();
+                if(ultimateValue[key] != undefined){
+                    try {
+                        delete(ultimateValue[key]);
+                        saveUltimateValue(ultimateValue);
+                        return true;
+                    } catch (e){
+                        //
+                    }
+                }
             }
 
             return false;
         },
 
         clearAll : function () {
-            if(useable !== false){
-                LocalStorage.clear();
+            if(this.check() !== false){
+                ultimateValue = {};
+                LocalStorage.remove(ultimateKey);
                 return true;
             }
 

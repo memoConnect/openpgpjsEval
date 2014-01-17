@@ -2,7 +2,7 @@
 
 var ctrl = angular.module('Controllers',[]);
 
-ctrl.controller('GenerateCtrl',['$scope','LocalStorage',function($scope, LocalStorage){
+ctrl.controller('GenerateCtrl',['$scope','LocalStorageService',function($scope, LocalStorageService){
     $scope.message = "";
 
     $scope.email = "";
@@ -20,7 +20,7 @@ ctrl.controller('GenerateCtrl',['$scope','LocalStorage',function($scope, LocalSt
 
         clearKeys();
 
-        if(LocalStorage.check() !== true){
+        if(LocalStorageService.check() !== true){
             $scope.message = "LocalStorage not available!";
             return false;
         }
@@ -47,8 +47,8 @@ ctrl.controller('GenerateCtrl',['$scope','LocalStorage',function($scope, LocalSt
                 $scope.pubKey = data.publicKeyArmored;
             }
 
-            LocalStorage.save("privKey",data.privateKeyArmored);
-            LocalStorage.save("pubKey",data.publicKeyArmored);
+            LocalStorageService.save("privKey",data.privateKeyArmored);
+            LocalStorageService.save("pubKey",data.publicKeyArmored);
 
             $scope.timer = end / 1000;
             $scope.message = "Finished in " + $scope.timer + "s";
@@ -61,20 +61,20 @@ ctrl.controller('GenerateCtrl',['$scope','LocalStorage',function($scope, LocalSt
     };
 
     $scope.load = function(){
-        if(LocalStorage.check() !== true){
+        if(LocalStorageService.check() !== true){
             $scope.message = "LocalStorage not available!";
             return false;
         }
 
-        $scope.privKey  = LocalStorage.get("privKey");
-        $scope.pubKey   = LocalStorage.get("pubKey");
+        $scope.privKey  = LocalStorageService.get("privKey");
+        $scope.pubKey   = LocalStorageService.get("pubKey");
 
         return true;
     };
 
     $scope.clearStorage = function(){
         clearKeys();
-        LocalStorage.clearAll();
+        LocalStorageService.clearAll();
     };
 
     function checkBrowserRandomValues(){
@@ -153,22 +153,4 @@ ctrl.controller('handleKeyCtrl',['$rootScope','$scope','LocalStorageService', fu
     $scope.clearValue = function (){
         $scope.currentValue = "";
     };
-}]);
-
-ctrl.controller('handleAllKeysCtrl',['$rootScope','$scope','LocalStorageService', function($rootScope, $scope, LocalStorageService){
-    var ultimateKey = "MULTIKEY";
-    var ultimateValue = {};
-
-    $scope.generateUltimateValue = function(){
-        ultimateValue = {};
-        var keys = LocalStorageService.getAllKeys();
-
-        angular.forEach(keys, function(key, index){
-            this[key] = LocalStorageService.get(key);
-        }, ultimateValue);
-
-        if(LocalStorageService.save(ultimateKey, JSON.stringify(ultimateValue))){
-            $rootScope.$broadcast('refreshKeys');
-        }
-    }
 }]);
