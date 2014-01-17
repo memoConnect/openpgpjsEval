@@ -91,22 +91,22 @@ ctrl.controller('GenerateCtrl',['$scope','LocalStorage',function($scope, LocalSt
     }
 }]);
 
-ctrl.controller('StorageCtrl',['$scope','LocalStorage',function($scope,LocalStorage){
+ctrl.controller('StorageCtrl',['$scope','LocalStorageService',function($scope,LocalStorageService){
     $scope.checkLocalStorageMessage = 'LocalStorage nicht verfügbar!';
 
     $scope.refreshKeys = function(){
-        $scope.storageKeys = LocalStorage.getAllKeys();
+        $scope.storageKeys = LocalStorageService.getAllKeys();
     }
 
     $scope.checkStorage = function(){
-        if(LocalStorage.check() !== false){
+        if(LocalStorageService.check() !== false){
             $scope.checkLocalStorageMessage = 'LocalStorage ist verfügbar!';
             $scope.$broadcast('refreshKeys');
         }
     };
 
     $scope.isLocalStorage = function(){
-        if(localStorage !== false){
+        if(LocalStorageService.check() !== false){
             return true;
         }
 
@@ -114,15 +114,15 @@ ctrl.controller('StorageCtrl',['$scope','LocalStorage',function($scope,LocalStor
     }
 
     $scope.clearStorage = function(){
-        localStorage.clearAll();
+        LocalStorageService.clearAll();
     }
 
     $scope.$on('refreshKeys', $scope.refreshKeys);
 }]);
 
-ctrl.controller('addFormKeyCtrl',['$rootScope','$scope','LocalStorage',function($rootScope,$scope,LocalStorage){
+ctrl.controller('addFormKeyCtrl',['$rootScope','$scope','LocalStorageService',function($rootScope,$scope,LocalStorageService){
     $scope.addStorageKey = function(){
-       if(LocalStorage.save($scope.key, $scope.value)){
+       if(LocalStorageService.save($scope.key, $scope.value)){
            $scope.resetForm();
            $rootScope.$broadcast('refreshKeys');
        }
@@ -134,20 +134,20 @@ ctrl.controller('addFormKeyCtrl',['$rootScope','$scope','LocalStorage',function(
     };
 }]);
 
-ctrl.controller('handleKeyCtrl',['$rootScope','$scope','LocalStorage', function($rootScope,$scope,LocalStorage){
+ctrl.controller('handleKeyCtrl',['$rootScope','$scope','LocalStorageService', function($rootScope,$scope,LocalStorageService){
     $scope.currentValue = "";
 
     $scope.deleteKey = function(key){
-        if($scope.currentValue == LocalStorage.get(key)){
+        if($scope.currentValue == LocalStorageService.get(key)){
             $scope.clearValue();
         };
 
-        if(LocalStorage.remove(key)){
+        if(LocalStorageService.remove(key)){
             $rootScope.$broadcast('refreshKeys');
         }
     };
     $scope.showValue = function(key){
-        $scope.currentValue = LocalStorage.get(key);
+        $scope.currentValue = LocalStorageService.get(key);
     };
 
     $scope.clearValue = function (){
@@ -155,19 +155,19 @@ ctrl.controller('handleKeyCtrl',['$rootScope','$scope','LocalStorage', function(
     };
 }]);
 
-ctrl.controller('handleAllKeysCtrl',['$rootScope','$scope','LocalStorage', function($rootScope, $scope, LocalStorage){
+ctrl.controller('handleAllKeysCtrl',['$rootScope','$scope','LocalStorageService', function($rootScope, $scope, LocalStorageService){
     var ultimateKey = "MULTIKEY";
     var ultimateValue = {};
 
     $scope.generateUltimateValue = function(){
         ultimateValue = {};
-        var keys = LocalStorage.getAllKeys();
+        var keys = LocalStorageService.getAllKeys();
 
         angular.forEach(keys, function(key, index){
-            this[key] = LocalStorage.get(key);
+            this[key] = LocalStorageService.get(key);
         }, ultimateValue);
 
-        if(LocalStorage.save(ultimateKey, JSON.stringify(ultimateValue))){
+        if(LocalStorageService.save(ultimateKey, JSON.stringify(ultimateValue))){
             $rootScope.$broadcast('refreshKeys');
         }
     }
